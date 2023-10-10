@@ -27,7 +27,25 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [userId])
+  user      User    @relation(fields: [userId], references: [userId])
+  replyFrom Reply[] @relation("to")
+  replyTo   Reply?  @relation("from")
+}
+
+//
+// reply.prisma
+//
+
+model Reply {
+  toId      String   @db.VarChar(255)
+  fromId    String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  to   Post @relation(name: "to", fields: [toId], references: [postId])
+  from Post @relation(name: "from", fields: [fromId], references: [postId])
+
+  @@id([toId, fromId])
 }
 
 //
