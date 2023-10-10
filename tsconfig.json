@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
+    "types": ["@types/jest", "@quramy/jest-prisma"],
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
