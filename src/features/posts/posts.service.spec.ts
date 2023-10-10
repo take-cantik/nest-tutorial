@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaClient } from '@prisma/client';
 import { PostService } from './posts.service';
-import { PrismaService } from '~/prisma.service';
 import { generateUuid } from '~/utils/uuid';
 
 describe('PostService', () => {
@@ -9,7 +7,12 @@ describe('PostService', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      providers: [PostService, PrismaService],
+      providers: [
+        {
+          provide: PostService,
+          useFactory: () => new PostService(jestPrisma.client),
+        },
+      ],
     }).compile();
 
     postService = app.get<PostService>(PostService);
@@ -17,7 +20,7 @@ describe('PostService', () => {
 
   describe('findPostByPostId', () => {
     it('特定のIDのポストを取得できること', async () => {
-      const db = new PrismaClient();
+      const db = jestPrisma.client;
       const postId = generateUuid();
       const expected = await db.post.create({
         data: {
