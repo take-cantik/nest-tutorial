@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { generateUuid } from '~/utils/uuid';
 import { PostController } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
-import { PostService } from '../services/posts.service';
+import { PostRepository } from '../repositories/posts.repository';
 
 describe('PostController', () => {
   let postController: PostController;
@@ -12,8 +12,8 @@ describe('PostController', () => {
       controllers: [PostController],
       providers: [
         {
-          provide: PostService,
-          useFactory: () => new PostService(jestPrisma.client),
+          provide: PostRepository,
+          useFactory: () => new PostRepository(jestPrisma.client),
         },
       ],
     }).compile();

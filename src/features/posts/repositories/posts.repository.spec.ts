@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostService } from './posts.service';
+import { PostRepository } from './posts.repository';
 import { generateUuid } from '~/utils/uuid';
 
-describe('PostService', () => {
-  let postService: PostService;
+describe('PostRepository', () => {
+  let postRepository: PostRepository;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: PostService,
-          useFactory: () => new PostService(jestPrisma.client),
+          provide: PostRepository,
+          useFactory: () => new PostRepository(jestPrisma.client),
         },
       ],
     }).compile();
 
-    postService = app.get<PostService>(PostService);
+    postRepository = app.get<PostRepository>(PostRepository);
   });
 
   describe('findPostByPostId', () => {
@@ -30,7 +30,7 @@ describe('PostService', () => {
         },
       });
 
-      const result = await postService.findPostByPostId({ postId });
+      const result = await postRepository.findPostByPostId({ postId });
       expect(result).toStrictEqual(expected);
     });
   });
