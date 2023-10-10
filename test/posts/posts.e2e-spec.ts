@@ -24,7 +24,6 @@ describe('PostController (e2e)', () => {
       post: {
         postId: 'd5863e08-36b7-461b-8f05-96fbfe732c13',
         title: 'post-test',
-        body: 'post-body',
         createdAt: '2023-10-10T04:06:31.715Z',
         updatedAt: '2023-10-10T04:06:31.715Z',
       },

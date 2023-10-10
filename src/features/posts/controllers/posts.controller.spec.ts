@@ -29,7 +29,6 @@ describe('PostController', () => {
         data: {
           postId: postId,
           title: 'post-test',
-          body: 'post-body',
         },
       });
 

@@ -1,7 +1,6 @@
 model Post {
   postId String @id
   title String @db.VarChar(255)
-  body String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
