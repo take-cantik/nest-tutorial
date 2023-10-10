@@ -5,7 +5,7 @@ import {
   NotFoundException,
   Param,
 } from '@nestjs/common';
-import { PostService } from './posts.service';
+import { PostService } from '../services/posts.service';
 
 @Controller('posts')
 export class PostController {

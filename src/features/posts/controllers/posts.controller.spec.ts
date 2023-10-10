@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostService } from './posts.service';
 import { generateUuid } from '~/utils/uuid';
 import { PostController } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
+import { PostService } from '../services/posts.service';
 
 describe('PostController', () => {
   let postController: PostController;
