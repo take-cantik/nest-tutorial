@@ -1,21 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { AuthUserRepository } from '../repositories/auth-user.repository';
 import { comparePassword } from '~/utils/password';
+import { JwtService } from '@nestjs/jwt';
+import { AuthUser } from '../domain/enitites/auth-user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private authUserRepository: AuthUserRepository) {}
+  constructor(
+    private authUserRepository: AuthUserRepository,
+    private jwtService: JwtService,
+  ) {}
 
   async validateAuthUser(
     publicId: string,
     password: string,
-  ): Promise<string | null> {
-    const user = await this.authUserRepository.findAuthUserByPublicId(publicId);
+  ): Promise<AuthUser | null> {
+    const authUser = await this.authUserRepository.findAuthUserByPublicId(
+      publicId,
+    );
 
-    if (!user || !comparePassword(password, user.hashedPassword)) {
+    if (!authUser || !comparePassword(password, authUser.hashedPassword)) {
       return null;
     }
 
-    return user.userId;
+    return authUser;
+  }
+
+  async login(authUser: AuthUser) {
+    const payload = { publicId: authUser.publicId, sub: authUser.userId };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }
