@@ -4,6 +4,7 @@ import { PostController } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
 import { PostRepository } from '../repositories/posts.repository';
 import { hashPassword } from '~/utils/password';
+import { PrismaService } from 'nestjs-prisma';
 
 describe('PostController', () => {
   let postController: PostController;
@@ -12,9 +13,10 @@ describe('PostController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [PostController],
       providers: [
+        PostRepository,
         {
-          provide: PostRepository,
-          useFactory: () => new PostRepository(jestPrisma.client),
+          provide: PrismaService,
+          useFactory: () => jestPrisma.client,
         },
       ],
     }).compile();

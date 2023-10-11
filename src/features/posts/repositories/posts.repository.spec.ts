@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PostRepository } from './posts.repository';
 import { generateUuid } from '~/utils/uuid';
 import { hashPassword } from '~/utils/password';
+import { PrismaService } from 'nestjs-prisma';
 
 describe('PostRepository', () => {
   let postRepository: PostRepository;
@@ -9,9 +10,10 @@ describe('PostRepository', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
+        PostRepository,
         {
-          provide: PostRepository,
-          useFactory: () => new PostRepository(jestPrisma.client),
+          provide: PrismaService,
+          useFactory: () => jestPrisma.client,
         },
       ],
     }).compile();
