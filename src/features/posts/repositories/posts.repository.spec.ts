@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostRepository } from './posts.repository';
 import { generateUuid } from '~/utils/uuid';
+import { hashPassword } from '~/utils/password';
 
 describe('PostRepository', () => {
   let postRepository: PostRepository;
@@ -21,11 +22,21 @@ describe('PostRepository', () => {
   describe('findPostByPostId', () => {
     it('特定のIDのポストを取得できること', async () => {
       const db = jestPrisma.client;
+      const user = await db.user.create({
+        data: {
+          userId: generateUuid(),
+          publicId: 'take-cantik',
+          username: 'みきみきどーざん',
+          password: await hashPassword('ahiahi'),
+        },
+      });
+
       const postId = generateUuid();
       const expected = await db.post.create({
         data: {
           postId: postId,
-          title: 'post-test',
+          text: 'post-test',
+          userId: user.userId,
         },
       });
 
