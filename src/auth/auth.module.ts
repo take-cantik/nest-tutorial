@@ -25,6 +25,7 @@ import { PrismaModule, PrismaService } from 'nestjs-prisma';
     AuthUserRepository,
     PrismaService,
   ],
+  exports: [AuthService, JwtModule],
   controllers: [AuthController],
 })
 export class AuthModule {}
