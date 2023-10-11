@@ -1,4 +1,4 @@
-import { PrismaService } from '~/services/prisma.service';
+import { PrismaService } from 'nestjs-prisma';
 import { AuthUser } from '../domain/enitites/auth-user.entity';
 import { formatToStringFromDate } from '~/utils/day';
 
