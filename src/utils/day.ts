@@ -16,9 +16,13 @@ export const formatToUnixTimeFromDate = (date: Date) => {
 };
 
 export const now = (): string => {
-  return dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]');
+  return dayjs().format('YYYY-MM-DD HH:mm:ss');
 };
 
 export const formatToStringFromDate = (date: Date) => {
-  return dayjs(date).format('YYYY-MM-DDTHH:mm:ssZ[Z]');
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+};
+
+export const formatToDateFromString = (date: string) => {
+  return dayjs(date).toDate();
 };

@@ -1,7 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { AuthUser } from '../domain/enitites/auth-user.entity';
-import { formatToStringFromDate } from '~/utils/day';
+import { formatToDateFromString, formatToStringFromDate } from '~/utils/day';
 
+@Injectable()
 export class AuthUserRepository {
   constructor(private prisma: PrismaService) {}
 
@@ -28,8 +30,8 @@ export class AuthUserRepository {
         publicId: authUser.publicId,
         username: '名無し',
         password: authUser.hashedPassword,
-        createdAt: authUser.createdAt,
-        updatedAt: authUser.updatedAt,
+        createdAt: formatToDateFromString(authUser.createdAt),
+        updatedAt: formatToDateFromString(authUser.updatedAt),
       },
     });
   }
