@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { AuthUser } from '../domain/enitites/auth-user.entity';
+import { AuthUser } from '../enitites/auth-user.entity';
 import { formatToDateFromString, formatToStringFromDate } from '~/utils/day';
 
 @Injectable()

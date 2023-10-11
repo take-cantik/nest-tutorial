@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostRepository } from '../repositories/posts.repository';
-import { JwtAuthGuard } from '~/auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from '~/auth/jwt/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('posts')
