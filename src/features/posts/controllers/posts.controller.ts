@@ -8,11 +8,15 @@ import {
 } from '@nestjs/common';
 import { PostRepository } from '../repositories/posts.repository';
 import { JwtAuthGuard } from '~/auth/guard/jwt-auth.guard';
+import { ApiHeader } from '@nestjs/swagger';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly postRepository: PostRepository) {}
 
+  @ApiHeader({
+    name: 'Authentication',
+  })
   @UseGuards(JwtAuthGuard)
   @Get(':postId')
   @HttpCode(200)

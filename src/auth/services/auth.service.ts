@@ -15,9 +15,8 @@ export class AuthService {
     publicId: string,
     password: string,
   ): Promise<AuthUser | null> {
-    const authUser = await this.authUserRepository.findAuthUserByPublicId(
-      publicId,
-    );
+    const authUser =
+      await this.authUserRepository.findAuthUserByPublicId(publicId);
 
     if (!authUser || !comparePassword(password, authUser.hashedPassword)) {
       return null;
@@ -26,7 +25,22 @@ export class AuthService {
     return authUser;
   }
 
-  async login(authUser: AuthUser) {
+  async signup(authUser: AuthUser) {
+    const payload = { publicId: authUser.publicId, sub: authUser.userId };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+
+  async login(publicId: string, password: string) {
+    const authUser =
+      await this.authUserRepository.findAuthUserByPublicId(publicId);
+
+    if (!authUser || !comparePassword(password, authUser.hashedPassword)) {
+      return null;
+    }
+
     const payload = { publicId: authUser.publicId, sub: authUser.userId };
 
     return {
