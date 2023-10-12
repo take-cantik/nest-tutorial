@@ -1,31 +1,9 @@
 import { Post } from '../domain/entities/post.entity';
 import { NotFoundException } from '@nestjs/common';
-
-type FindByIdPostOutPut = {
-  post: {
-    postId: string;
-    text: string;
-    author: {
-      authorId: string;
-      publicId: string;
-      username: string;
-    };
-    replyConut: number;
-    replyList: Array<{
-      replyId: string;
-      text: string;
-      author: {
-        authorId: string;
-        publicId: string;
-        username: string;
-      };
-      replyConut: number;
-    }>;
-  };
-};
+import { FindByIdPostResponseDto } from '../dto/find-by-id-post.dto';
 
 export class FindByIdPostPresenter {
-  static output(result: Post | null): FindByIdPostOutPut {
+  static output(result: Post | null): FindByIdPostResponseDto {
     if (!result) throw new NotFoundException('Not Found Post');
 
     return {
@@ -49,6 +27,6 @@ export class FindByIdPostPresenter {
           replyConut: reply.replyCount,
         })),
       },
-    };
+    } as FindByIdPostResponseDto;
   }
 }
