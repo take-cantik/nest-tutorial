@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from '~/utils/password';
 import { AuthUserRepository } from '../repositories/auth-user.repository';
 import { LoginDto } from '../dtos/login.dto';
+import { Response } from 'express';
 
 @Controller('auth/login')
 export class LoginController {
@@ -13,7 +14,10 @@ export class LoginController {
 
   @Post()
   @HttpCode(201)
-  async invoke(@Body() loginDto: LoginDto) {
+  async invoke(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const authUser = await this.authUserRepository.findAuthUserByPublicId(
       loginDto.publicId,
     );
@@ -26,6 +30,8 @@ export class LoginController {
     }
 
     const payload = { publicId: authUser.publicId, sub: authUser.userId };
+
+    response.cookie('access_token', this.jwtService.sign(payload));
 
     return {
       accessToken: this.jwtService.sign(payload),
