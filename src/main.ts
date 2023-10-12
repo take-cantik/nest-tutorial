@@ -9,7 +9,6 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('NestJS チュートリアル')
-    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

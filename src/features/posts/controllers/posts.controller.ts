@@ -8,13 +8,11 @@ import {
 } from '@nestjs/common';
 import { PostRepository } from '../repositories/posts.repository';
 import { JwtAuthGuard } from '~/auth/jwt/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly postRepository: PostRepository) {}
 
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':postId')
   @HttpCode(200)
