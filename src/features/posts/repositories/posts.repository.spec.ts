@@ -3,6 +3,10 @@ import { PostRepository } from './posts.repository';
 import { generateUuid } from '~/utils/uuid';
 import { hashPassword } from '~/utils/password';
 import { PrismaService } from 'nestjs-prisma';
+import { Post } from '../domain/entities/post.entity';
+import { formatToStringFromDate } from '~/utils/day';
+import { ReplyCollection } from '../domain/entities/reply-collection.entity';
+import { Author } from '../domain/value-objects/author.value-object';
 
 describe('PostRepository', () => {
   let postRepository: PostRepository;
@@ -33,16 +37,26 @@ describe('PostRepository', () => {
         },
       });
 
-      const postId = generateUuid();
-      const expected = await db.post.create({
+      const post = await db.post.create({
         data: {
-          postId: postId,
+          postId: generateUuid(),
           text: 'post-test',
           userId: user.userId,
         },
       });
 
-      const result = await postRepository.findPostByPostId({ postId });
+      const expected = new Post(
+        post.postId,
+        post.text,
+        formatToStringFromDate(post.createdAt),
+        formatToStringFromDate(post.updatedAt),
+        new Author(user.userId, user.publicId, user.username),
+        new ReplyCollection(post.postId, []),
+      );
+
+      const result = await postRepository.findPostByPostId({
+        postId: post.postId,
+      });
       expect(result).toStrictEqual(expected);
     });
   });
