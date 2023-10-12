@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from '~/utils/password';
 import { AuthUserRepository } from '../repositories/auth-user.repository';
@@ -26,15 +33,13 @@ export class LoginController {
       !authUser ||
       !comparePassword(loginDto.password, authUser.hashedPassword)
     ) {
-      return null;
+      throw new UnauthorizedException();
     }
 
     const payload = { publicId: authUser.publicId, sub: authUser.userId };
 
     response.cookie('access_token', this.jwtService.sign(payload));
 
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    return;
   }
 }

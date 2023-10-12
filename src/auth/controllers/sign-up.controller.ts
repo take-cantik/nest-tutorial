@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUser } from '../enitites/auth-user.entity';
 import { SignUpDto } from '../dtos/sign-up.dto';
@@ -6,6 +6,7 @@ import { generateUuid } from '~/utils/uuid';
 import { hashPassword } from '~/utils/password';
 import { now } from '~/utils/day';
 import { AuthUserRepository } from '../repositories/auth-user.repository';
+import { Response } from 'express';
 
 @Controller('auth/sign-up')
 export class SignUpController {
@@ -16,7 +17,10 @@ export class SignUpController {
 
   @Post()
   @HttpCode(201)
-  async invoke(@Body() signUpDto: SignUpDto) {
+  async invoke(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const { publicId, password } = signUpDto;
 
     const authUser = new AuthUser(
@@ -31,8 +35,8 @@ export class SignUpController {
 
     const payload = { publicId: authUser.publicId, sub: authUser.userId };
 
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    response.cookie('access_token', this.jwtService.sign(payload));
+
+    return;
   }
 }
