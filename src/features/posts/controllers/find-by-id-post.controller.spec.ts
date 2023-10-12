@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { generateUuid } from '~/utils/uuid';
-import { PostController } from './posts.controller';
+import { FindByIdPostController } from './find-by-id-post.controller';
 import { NotFoundException } from '@nestjs/common';
 import { PostRepository } from '../repositories/posts.repository';
 import { hashPassword } from '~/utils/password';
 import { PrismaService } from 'nestjs-prisma';
 
-describe('PostController', () => {
-  let postController: PostController;
+describe('FindByIdPostController', () => {
+  let findByIdPostController: FindByIdPostController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [PostController],
+      controllers: [FindByIdPostController],
       providers: [
         PostRepository,
         {
@@ -21,7 +21,9 @@ describe('PostController', () => {
       ],
     }).compile();
 
-    postController = app.get<PostController>(PostController);
+    findByIdPostController = app.get<FindByIdPostController>(
+      FindByIdPostController,
+    );
   });
 
   describe('findById', () => {
@@ -36,23 +38,36 @@ describe('PostController', () => {
         },
       });
 
-      const postId = generateUuid();
-      const expected = await db.post.create({
+      const post = await db.post.create({
         data: {
-          postId: postId,
+          postId: generateUuid(),
           text: 'post-test',
           userId: user.userId,
         },
       });
 
-      const result = await postController.findById(postId);
-      expect(result).toStrictEqual({ post: expected });
+      const expected = {
+        post: {
+          postId: post.postId,
+          text: post.text,
+          author: {
+            authorId: user.userId,
+            publicId: user.publicId,
+            username: user.username,
+          },
+          replyConut: 0,
+          replyList: [],
+        },
+      };
+
+      const result = await findByIdPostController.invoke(post.postId);
+      expect(result).toStrictEqual(expected);
     });
 
     it('特定のIDのポストが存在しない場合はNotFoundExceptionを取得できること', async () => {
       const postId = generateUuid();
 
-      await expect(postController.findById(postId)).rejects.toThrow(
+      await expect(findByIdPostController.invoke(postId)).rejects.toThrow(
         NotFoundException,
       );
     });
